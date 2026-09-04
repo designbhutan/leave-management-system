@@ -3,7 +3,7 @@ services:
     name: leave-management
     plan: free
     runtime: python
-    buildCommand: bash build.sh
+    buildCommand: bash leave_system_final_copy/build.sh
     startCommand: gunicorn leave_management.wsgi:application
     envVars:
       - key: DEBUG
