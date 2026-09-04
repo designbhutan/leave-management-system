@@ -2,13 +2,18 @@
 # Exit on error
 set -o errexit
 
-# Navigate to the folder containing manage.py and requirements.txt
+# Navigate into project folder
 cd leave_system_final_copy
 
-# Upgrade pip and install dependencies
+# Install dependencies
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-# Run static assets collection and database migrations
+# Run migrations and static files collection
 python manage.py collectstatic --no-input
 python manage.py migrate
+
+# Automatically create superuser if environment variables are set
+if [ "$DJANGO_SUPERUSER_USERNAME" ]; then
+  python manage.py createsuperuser --no-input || true
+fi
