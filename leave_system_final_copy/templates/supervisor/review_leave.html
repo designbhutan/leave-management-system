@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Review Leave{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Review Leave Application</h1><p class="muted">Decide the request and record your remarks.</p></div></div>
+<div class="card">
+<div class="detail-grid">
+<div><span class="muted">Staff</span><strong>{{ application.staff.get_full_name|default:application.staff.username }}</strong></div>
+<div><span class="muted">Employee ID</span><strong>{{ application.staff.profile.employee_id }}</strong></div>
+<div><span class="muted">Leave Type</span><strong>{{ application.leave_type.name }}</strong></div>
+<div><span class="muted">Period</span><strong>{{ application.date_range }}</strong></div>
+<div><span class="muted">Days</span><strong>{{ application.days }}</strong></div>
+<div><span class="muted">Applied</span><strong>{{ application.applied_at|date:"d M Y H:i" }}</strong></div>
+</div>
+<hr>
+<h3>Reason</h3><p class="reason">{{ application.reason }}</p>
+<form method="post">
+{% csrf_token %}
+<label>Decision</label>
+<div class="decision">{{ form.decision }}</div>
+<label>{{ form.remarks.label }}</label>{{ form.remarks }}
+<div class="actions"><button class="btn primary" type="submit">Save Decision</button><a class="btn secondary" href="{% url 'supervisor_dashboard' %}">Cancel</a></div>
+</form>
+</div>
+{% endblock %}

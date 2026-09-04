@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Login · Leave Management{% endblock %}
+{% block content %}
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="logo-big">LM</div>
+        <h1>Leave Management</h1>
+        <p class="muted">Sign in with your individual account.</p>
+        {% if form.errors %}<div class="message error">Invalid username or password.</div>{% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <label>Username</label>
+            <input type="text" name="username" autofocus required>
+            <label>Password</label>
+            <input type="password" name="password" required>
+            <button class="btn primary full">Sign In</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll("input[type=date]").forEach(x=>x.addEventListener("change",()=>{}));});

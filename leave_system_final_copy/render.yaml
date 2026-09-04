@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: leave-management
+    runtime: python
+    buildCommand: bash build.sh
+    startCommand: gunicorn leave_management.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: leave-management-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: "127.0.0.1,localhost"
+      - key: TIME_ZONE
+        value: Asia/Thimphu
+
+databases:
+  - name: leave-management-db
+    databaseName: leave_management
+    user: leave_management

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Supervisor Dashboard{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Supervisor Dashboard</h1><p class="muted">Monitor, filter and decide staff leave applications.</p></div></div>
+<div class="grid cards">
+<div class="card stat"><div class="muted">Staff</div><strong>{{ staff_count }}</strong><small>registered staff</small></div>
+<div class="card stat"><div class="muted">Pending</div><strong>{{ pending_count }}</strong><small>applications awaiting review</small></div>
+<div class="card stat"><div class="muted">Visible Records</div><strong>{{ applications|length }}</strong><small>after current filters</small></div>
+</div>
+<div class="card">
+<h2>Filters</h2>
+<form method="get" class="filters multi">
+<input name="person" value="{{ filters.person }}" placeholder="Person name / username / employee ID">
+<select name="status"><option value="">All statuses</option>{% for value,label in statuses %}<option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+<select name="leave_type"><option value="">All leave types</option>{% for lt in leave_types %}<option value="{{ lt.id }}" {% if filters.leave_type == lt.id|stringformat:"s" %}selected{% endif %}>{{ lt.name }}</option>{% endfor %}</select>
+<input type="date" name="start" value="{{ filters.start }}" title="Start date from">
+<input type="date" name="end" value="{{ filters.end }}" title="End date to">
+<button class="btn primary">Apply Filters</button><a class="btn secondary" href="{% url 'supervisor_dashboard' %}">Clear</a>
+</form>
+</div>
+<div class="card">
+<h2>Staff Leave Records</h2>
+<div class="table-wrap"><table><thead><tr><th>Staff</th><th>Leave Type</th><th>Dates</th><th>Days</th><th>Status</th><th>Supervisor</th><th>Remarks</th><th>Action</th></tr></thead><tbody>
+{% for a in applications %}
+<tr>
+<td><strong>{{ a.staff.get_full_name|default:a.staff.username }}</strong><br><small>{{ a.staff.profile.employee_id }}</small></td>
+<td>{{ a.leave_type.name }}</td><td>{{ a.date_range }}</td><td>{{ a.days }}</td>
+<td><span class="badge {{ a.status|lower }}">{{ a.get_status_display }}</span></td>
+<td>{% if a.reviewed_by %}{{ a.reviewed_by.get_full_name|default:a.reviewed_by.username }}<br><small>{{ a.reviewed_at|date:"d M Y H:i" }}</small>{% else %}—{% endif %}</td>
+<td>{{ a.supervisor_remarks|default:"—" }}</td>
+<td>{% if a.status == "PENDING" %}<a class="btn small primary" href="{% url 'review_leave' a.pk %}">Review</a>{% else %}<form method="post" action="{% url 'cancel_review' a.pk %}" class="inline-form">{% csrf_token %}<button class="btn small secondary" onclick="return confirm('Return this application to Pending?')">Reopen</button></form>{% endif %}</td>
+</tr>
+{% empty %}<tr><td colspan="8">No matching leave records.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}
