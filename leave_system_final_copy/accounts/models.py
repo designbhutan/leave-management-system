@@ -14,7 +14,7 @@ class StaffProfile(models.Model):
     department = models.CharField(max_length=150, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_STAFF)
-    annual_leave_entitlement = models.DecimalField(max_digits=6, decimal_places=2, default=30)
+    annual_leave_entitlement = models.DecimalField(max_digits=6, decimal_places=2, default=21)
 
     def __str__(self):
         return f"{self.employee_id} - {self.user.get_full_name() or self.user.username}"
